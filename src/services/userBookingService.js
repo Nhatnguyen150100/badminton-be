@@ -1,6 +1,6 @@
 import { Op, Sequelize } from "sequelize";
 import logger from "../config/winston";
-import { DEFINE_SCHEDULE_STATUS, DEFINE_STATUS } from "../constants/status";
+import { DEFINE_SCHEDULE_STATUS, DEFINE_STATUS, TRANSACTION_TYPE } from "../constants/status";
 import db from "../models";
 import onRemoveParams from "../utils/remove-params";
 import {
@@ -365,6 +365,13 @@ const userBookingService = {
             },
           }
         );
+        await db.TransactionHistory.create({
+          transactionUserId: userBookId,
+          receiveUserId: userId,
+          transactionType: TRANSACTION_TYPE.COURT_BOOKING,
+          transactionAmount: constBooking,
+          discountedAdmin: constBooking * 0.1
+        })
         if (updatedStatus) {
           return resolve(
             new BaseSuccessResponse({

@@ -6,7 +6,7 @@ import {
 } from "../config/baseReponse";
 import { DEFINE_STATUS_RESPONSE } from "../config/statusResponse";
 import logger from "../config/winston";
-import { DEFINE_STATUS } from "../constants/status";
+import { DEFINE_STATUS, TRANSACTION_TYPE } from "../constants/status";
 import db from "../models";
 import onRemoveParams from "../utils/remove-params";
 import dayjs from "dayjs";
@@ -220,6 +220,13 @@ const badmintonGatherBookingService = {
             },
           }
         );
+        await db.TransactionHistory.create({
+          transactionUserId: userBookingId,
+          receiveUserId: userOwnerId,
+          transactionType: TRANSACTION_TYPE.GATHER_BOOKING,
+          transactionAmount: totalMoneyHavePay,
+          discountedAdmin: totalMoneyHavePay * 0.1
+        })
         if (updated[0] > 0 && updatedGather[0] > 0) {
           return resolve(
             new BaseSuccessResponse({
