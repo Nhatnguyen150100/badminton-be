@@ -1,9 +1,10 @@
 "use strict";
 
-import { BaseErrorResponse } from "../config/baseReponse";
+import { BaseErrorResponse, BaseResponseList } from "../config/baseReponse";
 import { DEFINE_STATUS_RESPONSE } from "../config/statusResponse";
 import logger from "../config/winston";
 import db from "../models";
+import onRemoveParams from "../utils/remove-params";
 
 const transactionHistoryService = {
   getAllTransactions: (data) => {
@@ -31,6 +32,10 @@ const transactionHistoryService = {
             {
               model: db.User,
               as: "transactionUser",
+            },
+            {
+              model: db.User,
+              as: "receiveUser",
             },
           ],
           ...option,

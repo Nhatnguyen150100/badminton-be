@@ -41,6 +41,7 @@ module.exports = {
       accountBalance: {
         allowNull: false,
         type: Sequelize.INTEGER,
+        defaultValue: 0,
       },
       createdAt: {
         allowNull: false,
