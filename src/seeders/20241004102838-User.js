@@ -23,6 +23,7 @@ module.exports = {
             "$2b$10$6eXQVPv8SBbKvivehAXVWe/lotzezRfMWZ3oc82vfxHUYZnKp0gVG", // plain = password
           createdAt: new Date(),
           updatedAt: new Date(),
+          accountBalance: 0,
         },
         {
           id: "d511aeab-f46d-248c-a29d-55ad1855651a",
@@ -32,6 +33,7 @@ module.exports = {
             "$2b$10$6eXQVPv8SBbKvivehAXVWe/lotzezRfMWZ3oc82vfxHUYZnKp0gVG", // plain = password
           createdAt: new Date(),
           updatedAt: new Date(),
+          accountBalance: 0,
         },
       ],
       {}
@@ -45,6 +47,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    return queryInterface.bulkDelete('Users', null, {});
+    return queryInterface.bulkDelete("Users", null, {});
   },
 };
