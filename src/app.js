@@ -23,6 +23,7 @@ import badmintonGatherRouter from "./routes/badmintonGatherRouter";
 import badmintonGatherBookingRouter from "./routes/badmintonGatherBookingRouter";
 import badmintonBookingCommentRouter from "./routes/badmintonBookingCommentRouter";
 import transactionHistoryRouter from "./routes/transactionHistoryRouter";
+import paymentRouter from "./routes/paymentRouter";
 const { default: loggerWinston } = require("./config/winston");
 
 connectDB.connect();
@@ -77,6 +78,7 @@ app.use("/v1/gather", badmintonGatherRouter);
 app.use("/v1/gather-booking", badmintonGatherBookingRouter);
 app.use("/v1/gather-comment", badmintonBookingCommentRouter);
 app.use("/v1/transaction-history", transactionHistoryRouter);
+app.use("/v1/payment", paymentRouter);
 
 app.listen(process.env.PORT || 3000, () => {
   loggerWinston.info("Server listening on port: " + (process.env.PORT || 3000));

@@ -6,19 +6,18 @@ const profileController = {
     try {
       const avatar = req.avatar;
       const { id } = req.params;
-      const { fullName, gender, phoneNumber, accountBalance } = req.body;
+      const { fullName, gender, phoneNumber } = req.body;
       const rs = await profileService.updateProfile(
         id,
         fullName,
         gender,
         avatar,
-        phoneNumber,
-        accountBalance
+        phoneNumber
       );
       res.status(rs.status).json(rs);
     } catch (error) {
       logger.error(error.message);
-      res.status(error.status).json(rs.message);
+      res.status(error.status).json(error.message);
     }
   },
   getProfile: async (req, res) => {
@@ -28,7 +27,7 @@ const profileController = {
       res.status(rs.status).json(rs);
     } catch (error) {
       logger.error(error.message);
-      res.status(error.status).json(rs.message);
+      res.status(error.status).json(error.message);
     }
   },
 };
