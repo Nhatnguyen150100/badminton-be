@@ -12,10 +12,7 @@ paymentRouter.post(
 
 paymentRouter.get(
   "/update-user-amount/:id",
-  tokenMiddleware.verifyToken,
   paymentController.updateUserAmount
 );
-
-
 
 export default paymentRouter;

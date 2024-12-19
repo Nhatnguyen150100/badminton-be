@@ -4,7 +4,7 @@ import * as crypto from "crypto";
 import * as queryString from "qs";
 import { BaseErrorResponse, BaseSuccessResponse } from "../config/baseReponse";
 import logger from "../config/winston";
-import tokenService from "./token/tokenService";
+import bcrypt from "bcrypt";
 import { Sequelize } from "sequelize";
 import dayjs from "dayjs";
 
@@ -40,7 +40,7 @@ const paymentService = {
         const user = await db.User.findOne({
           where: { id: userId },
         });
-        const accessToken = tokenService.generateToken(user);
+        const secretToken = bcrypt.hash(process.env.VN_PAY_HASH_KEY, 10);
         const merchantId = process.env.VN_PAY_MERCHANT_ID;
         const hashSecret = process.env.VN_PAY_HASH_SECRET;
         const vnPayUrl = process.env.VN_PAY_URL;
@@ -58,8 +58,7 @@ const paymentService = {
           vnp_Locale: "vn",
           vnp_OrderInfo: user.email,
           vnp_OrderType: "billpayment",
-          vnp_ReturnUrl: `${process.env.BASE_URL_SERVER}/v1/payment/update-user-amount/${userId}?amount=${amount}`,
-          // vnp_ReturnUrl: 'http://localhost:3000/payment/return',
+          vnp_ReturnUrl: `${process.env.BASE_URL_SERVER}/v1/payment/update-user-amount/${userId}?amount=${amount}&secretToken=${secretToken}`,
           vnp_TxnRef: dayjs(date).format("DDHHmmss"),
         };
 
@@ -86,7 +85,7 @@ const paymentService = {
       }
     });
   },
-  updateUserAmount: (userId, amount) => {
+  updateUserAmount: (userId, amount, secretToken) => {
     return new Promise(async (resolve, reject) => {
       try {
         const user = await db.User.findOne({
@@ -99,11 +98,20 @@ const paymentService = {
             })
           );
         }
+        const validHashKey = bcrypt.compare(
+          secretToken,
+          process.env.VN_PAY_HASH_KEY
+        );
+        if (!validHashKey) {
+          return reject(
+            new BaseErrorResponse({
+              message: "Mã xác thực không chính xác",
+            })
+          );
+        }
         await db.User.update(
           {
-            accountBalance: Sequelize.literal(
-              `accountBalance + ${amount}`
-            ),
+            accountBalance: Sequelize.literal(`accountBalance + ${amount}`),
           },
           {
             where: {

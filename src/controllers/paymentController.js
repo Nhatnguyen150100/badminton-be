@@ -15,13 +15,13 @@ const paymentController = {
   updateUserAmount: async (req, res) => {
     try {
       const { id } = req.params;
-      const { amount } = req.query;
-      const rs = await paymentService.updateUserAmount(id, amount);
-      res.status(rs.status).json(rs);
+      const { amount, secretToken } = req.query;
+      await paymentService.updateUserAmount(id, amount, secretToken);
+      res.redirect(`${process.env.BASE_URL_CLIENT}/payment-success`);
     } catch (error) {
       res.status(error.status).json(error.message);
     }
-  }
+  },
 };
 
 export default paymentController;
