@@ -10,9 +10,6 @@ paymentRouter.post(
   paymentController.createPayment
 );
 
-paymentRouter.get(
-  "/update-user-amount/:id",
-  paymentController.updateUserAmount
-);
+paymentRouter.get("/update-user-amount", paymentController.updateUserAmount);
 
 export default paymentRouter;

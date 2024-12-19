@@ -7,13 +7,7 @@ import logger from "../config/winston";
 import bcrypt from "bcrypt";
 import { Sequelize } from "sequelize";
 import dayjs from "dayjs";
-
-function generateSignature(queryString, hashSecret) {
-  const hmac = crypto.createHmac("sha512", hashSecret);
-  hmac.update(Buffer.from(queryString, "utf-8"));
-  const hashCode = hmac.digest("hex");
-  return hashCode;
-}
+import generateSignature from "../utils/generate-signature";
 
 function sortObject(obj) {
   const sorted = {};
@@ -56,9 +50,9 @@ const paymentService = {
           vnp_CurrCode: "VND",
           vnp_IpAddr: "127.0.0.1",
           vnp_Locale: "vn",
-          vnp_OrderInfo: user.email,
+          vnp_OrderInfo: user.id,
           vnp_OrderType: "billpayment",
-          vnp_ReturnUrl: `${process.env.BASE_URL_SERVER}/v1/payment/update-user-amount/${userId}?amount=${amount}&secretToken=${secretToken}`,
+          vnp_ReturnUrl: `${process.env.BASE_URL_SERVER}/v1/payment/update-user-amount?secretToken=${secretToken}`,
           vnp_TxnRef: dayjs(date).format("DDHHmmss"),
         };
 
