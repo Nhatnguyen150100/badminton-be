@@ -47,6 +47,13 @@ const userBookingService = {
             id: scheduleId,
           },
         });
+        if (dayjs(currentSchedule.appointmentDate).isBefore(dayjs(), "day")) {
+          return reject(
+            new BaseErrorResponse({
+              message: "Ngày đặt lịch đã qua",
+            })
+          );
+        }
         const checkSchedule = await db.UserBooking.findAll({
           include: [
             {

@@ -22,6 +22,13 @@ const badmintonGatherBookingService = {
         const badmintonGather = await db.BadmintonGather.findByPk(
           badmintonGatherId
         );
+        if (dayjs(badmintonGather.appointmentDate).isBefore(dayjs(), "day")) {
+          return reject(
+            new BaseErrorResponse({
+              message: "Ngày đặt lịch đã qua",
+            })
+          );
+        }
         const { userId, numberMale, numberFemale, note } = data;
         if (
           numberMale > badmintonGather.totalMale ||
@@ -225,8 +232,8 @@ const badmintonGatherBookingService = {
           receiveUserId: userOwnerId,
           transactionType: TRANSACTION_TYPE.GATHER_BOOKING,
           transactionAmount: totalMoneyHavePay,
-          discountedAdmin: totalMoneyHavePay * 0.1
-        })
+          discountedAdmin: totalMoneyHavePay * 0.1,
+        });
         if (updated[0] > 0 && updatedGather[0] > 0) {
           return resolve(
             new BaseSuccessResponse({
