@@ -48,7 +48,7 @@ const badmintonGatherController = {
       });
       res.status(rs.status).json(rs);
     } catch (error) {
-      res.status(error.status).json(error.message);
+      res.status(error.status).json(error);
     }
   },
   updateBadmintonGather: async (req, res) => {

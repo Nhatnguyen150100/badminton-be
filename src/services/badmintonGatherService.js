@@ -8,7 +8,6 @@ import logger from "../config/winston";
 import db from "../models";
 import { DEFINE_STATUS_RESPONSE } from "../config/statusResponse";
 import onRemoveParams from "../utils/remove-params";
-import { DEFINE_STATUS } from "../constants/status";
 import groupAndMerge from "../utils/group-item";
 import dayjs from "dayjs";
 
@@ -16,6 +15,21 @@ const badmintonGatherService = {
   createBadmintonGather: (data) => {
     return new Promise(async (resolve, reject) => {
       try {
+        const checkExits = await db.BadmintonGather.findAll({
+          where: {
+            appointmentDate: data.appointmentDate,
+            startTime: data.startTime,
+            endTime: data.endTime,
+            userId: data.userId
+          },
+        })
+        if (checkExits.length > 0) {
+          return reject(
+            new BaseErrorResponse({
+              message: "Không thể tạo 2 lịch cùng 1 thời điểm",
+            })
+          );
+        }
         const created = await db.BadmintonGather.create(onRemoveParams(data));
         if (created) {
           return resolve(
